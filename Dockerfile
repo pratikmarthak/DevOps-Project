@@ -1,16 +1,18 @@
-FROM python:3.11   # safer version for Django 3.2
+# Use Python 3.11 (compatible with Django 3.2)
+FROM python:3.11
 
+# Set working directory
 WORKDIR /data
 
-# Install dependencies
-RUN apt-get update && apt-get install -y python3-distutils
-
+# Copy requirements and install them
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy project files
 COPY . .
 
-# Do not run migrate at build time
-# CMD will handle it when container runs
+# Expose port 8000
 EXPOSE 8000
+
+# Run the app (migrations should be done after container starts)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
