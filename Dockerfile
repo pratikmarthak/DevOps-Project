@@ -2,23 +2,22 @@ FROM python:3.11-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    build-essential \
     python3-distutils \
     python3-venv \
-    gcc \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set work directory
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies first (for better caching)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
+# Copy project files
 COPY . .
 
-# Expose port
 EXPOSE 8000
 
-# Default command: run with Gunicorn
+# Use Gunicorn as WSGI server
 CMD ["gunicorn", "todoApp.wsgi:application", "--bind", "0.0.0.0:8000"]
