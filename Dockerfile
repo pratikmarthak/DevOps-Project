@@ -23,4 +23,5 @@ COPY . .
 EXPOSE 8000
 
 # Default command (can override in docker-compose or k8s)
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "todo_project.wsgi:application"]
+CMD ["gunicorn", "todoApp.wsgi:application", "--bind", "0.0.0.0:8000"]
+
